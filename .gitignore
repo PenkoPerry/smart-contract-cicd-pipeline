@@ -1,1 +1,17 @@
+Node.js
+node_modules
+npm-debug.log
 
+Hardhat
+artifacts
+cache
+coverage
+coverage.json
+typechain-types
+
+Environment variables
+.env
+
+OS-specific
+.DS_Store
+Thumbs.db
