@@ -1,1 +1,28 @@
 
+{
+  "name": "smart-contract-cicd-pipeline",
+  "version": "1.0.0",
+  "description": "A project demonstrating a DevSecOps pipeline for smart contracts using Hardhat and GitHub Actions.",
+  "main": "index.js",
+  "scripts": {
+    "test": "hardhat test",
+    "compile": "hardhat compile",
+    "lint": "solhint 'contracts/**/*.sol'"
+  },
+  "keywords": [
+    "blockchain",
+    "devops",
+    "hardhat",
+    "solidity",
+    "ci-cd",
+    "chainops"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.6",
+    "solhint": "^4.5.2",
+    "dotenv": "^16.4.5"
+  }
+}
