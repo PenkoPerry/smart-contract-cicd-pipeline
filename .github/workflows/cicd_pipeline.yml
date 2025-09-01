@@ -46,10 +46,12 @@ jobs:
       - name: Start Ganache in Background
         run: npx ganache --wallet.seed myCustomSeed > /dev/null &
 
+      - name: Wait for Ganache to Start
+        # FIX: Added a 5-second delay to give Ganache time to initialize
+        # before the deployment script tries to connect to it.
+        run: sleep 5
+
       - name: Deploy to Ganache
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: npx hardhat run scripts/deploy.js --network ganache
-
-
-
 
