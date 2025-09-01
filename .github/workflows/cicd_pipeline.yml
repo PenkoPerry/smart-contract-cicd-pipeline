@@ -21,7 +21,9 @@ jobs:
           node-version: '18'
 
       - name: Install Dependencies
-        run: npm ci
+        # FIX: Changed 'npm ci' to 'npm install' to be more flexible and
+        # automatically generate a package-lock.json if it's missing.
+        run: npm install
 
       - name: Lint Contracts
         run: npx solhint 'contracts/**/*.sol'
@@ -56,4 +58,5 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         # We now target the 'ganache' network and our original 'deploy.js' script.
         run: npx hardhat run scripts/deploy.js --network ganache
+
 
