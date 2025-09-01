@@ -1,4 +1,4 @@
-# This GitHub Actions workflow defines the automated CI/CD pipeline for the smart contract.
+# This GitHub Actions workflow is now configured to deploy to an in-workflow Ganache instance.
 name: Smart Contract CI/CD Pipeline
 
 on:
@@ -42,11 +42,18 @@ jobs:
       - name: Run Tests
         run: npx hardhat test
 
-      - name: Deploy to Sepolia Testnet
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: npx hardhat run scripts/deploy.js --network sepolia
-        env:
-          SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      # --- Deployment Gate to Ganache ---
+      # These steps only run on a push to the 'main' branch.
 
+      - name: Start Ganache in Background
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          npm install -g ganache
+          ganache --wallet.deterministic --chain.chainId 1337 &
+          sleep 5 # Give Ganache a moment to start up
+
+      - name: Deploy to Ganache
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        # We now target the 'ganache' network and our 'deployCounter.js' script.
+        run: npx hardhat run scripts/deployCounter.js --network ganache
 
