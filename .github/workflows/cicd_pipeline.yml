@@ -1,1 +1,52 @@
+# This GitHub Actions workflow defines the automated CI/CD pipeline for the smart contract.
+name: Smart Contract CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Lint Contracts
+        run: npx solhint 'contracts/**/*.sol'
+
+      - name: Compile Contracts
+        run: npx hardhat compile
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Run Slither Security Analysis
+        run: |
+          pip install slither-analyzer
+          slither .
+
+      - name: Run Tests
+        run: npx hardhat test
+
+      - name: Deploy to Sepolia Testnet
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: npx hardhat run scripts/deploy.js --network sepolia
+        env:
+          SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+
 
