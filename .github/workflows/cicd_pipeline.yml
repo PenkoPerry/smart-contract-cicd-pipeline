@@ -54,6 +54,6 @@ jobs:
 
       - name: Deploy to Ganache
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        # We now target the 'ganache' network and our 'deployCounter.js' script.
-        run: npx hardhat run scripts/deployCounter.js --network ganache
+        # We now target the 'ganache' network and our original 'deploy.js' script.
+        run: npx hardhat run scripts/deploy.js --network ganache
 
